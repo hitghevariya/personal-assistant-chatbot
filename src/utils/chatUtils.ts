@@ -50,7 +50,7 @@ export const createMessage = (
   };
 };
 
-export const scrollToBottom = (messagesEndRef: React.RefObject<HTMLDivElement>) => {
+export const scrollToBottom = (messagesEndRef: React.RefObject<HTMLDivElement | null>) => {
   if (messagesEndRef.current) {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   }
