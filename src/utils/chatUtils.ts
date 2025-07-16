@@ -1,4 +1,4 @@
-import { Message, OpenAIMessage } from "@/types/chat";
+import { Message, GeminiMessage } from "@/types/chat";
 
 // Local storage key for storing chat messages
 const CHAT_STORAGE_KEY = "chatMessages";
@@ -15,17 +15,23 @@ export const loadMessagesFromStorage = (): Message[] => {
   }
 };
 
-export const saveMessagesToStorage = (messages: Message[]): void => {
-  if (messages.length > 0) {
+export const saveMessagesToStorage = (messages: Message[]) => {
+  try {
     localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  } catch (error) {
+    console.error("Failed to save messages:", error);
   }
 };
 
-export const clearMessagesFromStorage = (): void => {
-  localStorage.removeItem(CHAT_STORAGE_KEY);
+export const clearMessagesFromStorage = () => {
+  try {
+    localStorage.removeItem(CHAT_STORAGE_KEY);
+  } catch (error) {
+    console.error("Failed to clear messages:", error);
+  }
 };
 
-export const convertToOpenAIFormat = (messages: Message[]): OpenAIMessage[] => {
+export const convertToGeminiFormat = (messages: Message[]): GeminiMessage[] => {
   return messages.map((msg) => ({
     role: msg.role,
     content: msg.text,
@@ -44,10 +50,10 @@ export const createMessage = (
   };
 };
 
-export const scrollToBottom = (
-  ref: React.RefObject<HTMLDivElement | null>
-): void => {
-  ref.current?.scrollIntoView({ behavior: "smooth" });
+export const scrollToBottom = (messagesEndRef: React.RefObject<HTMLDivElement>) => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }
 };
 
 export const formatMessageTime = (isoString: string): string => {

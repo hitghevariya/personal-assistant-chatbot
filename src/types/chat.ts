@@ -6,8 +6,8 @@ export interface Message {
   createdAt: string;
 }
 
-// OpenAI message format
-export interface OpenAIMessage {
+// Gemini message format
+export interface GeminiMessage {
   role: "user" | "assistant";
   content: string;
 }
@@ -15,7 +15,7 @@ export interface OpenAIMessage {
 // Chat API request body
 export interface ChatRequest {
   message: string;
-  conversationHistory?: OpenAIMessage[];
+  conversationHistory?: GeminiMessage[];
 }
 
 // Chat API response

@@ -130,18 +130,21 @@ function MessageBubble({
       initial="hidden"
       animate="visible"
       exit="exit"
-      whileHover={{ scale: 1.02 }}
-      className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"}`}
+      whileHover={{ scale: 1.04 }}
+      whileTap={{ scale: 0.98 }}
+      className={`flex gap-2 md:gap-4 ${isUser ? "justify-end" : "justify-start"}`}
     >
       {/* Avatar for assistant messages */}
       {!isUser && (
         <motion.div
-          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileHover={{ scale: 1.12, rotate: 5 }}
+          whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 300 }}
+          className="drop-shadow-xl"
         >
-          <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-            <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-              <Bot className="h-5 w-5" />
+          <Avatar className="h-10 w-10 md:h-12 md:w-12 ring-4 ring-blue-300/30 shadow-lg">
+            <AvatarFallback className="bg-gradient-to-br from-blue-400 via-purple-400 to-indigo-400 text-white shadow-lg animate-pulse">
+              <Bot className="h-5 w-5 md:h-6 md:w-6" />
             </AvatarFallback>
           </Avatar>
         </motion.div>
@@ -149,21 +152,22 @@ function MessageBubble({
 
       {/* Message bubble */}
       <motion.div
-        className={`max-w-[75%] rounded-2xl px-4 py-3 relative ${
-          isUser
-            ? "bg-gradient-to-br from-primary to-primary/90 text-primary-foreground ml-12 rounded-br-md"
-            : "bg-gradient-to-br from-muted to-muted/80 text-muted-foreground rounded-bl-md"
-        }`}
+        className={`max-w-[90%] md:max-w-[75%] px-4 md:px-6 py-3 md:py-4 relative rounded-3xl shadow-xl backdrop-blur-md border border-white/20 transition-all duration-200
+          ${isUser
+            ? "bg-gradient-to-br from-blue-500 via-blue-400 to-indigo-400 text-white ml-8 md:ml-12 rounded-br-2xl"
+            : "bg-gradient-to-br from-white/30 via-blue-100/60 to-blue-200/60 text-blue-900 rounded-bl-2xl dark:from-black/30 dark:via-blue-900/40 dark:to-blue-900/60 dark:text-white"
+          }`}
         whileHover={{
-          scale: 1.02,
+          scale: 1.04,
           boxShadow: isUser
-            ? "0 10px 25px -5px rgba(0,0,0,0.1)"
-            : "0 10px 25px -5px rgba(0,0,0,0.05)",
+            ? "0 10px 32px -5px #60a5fa55"
+            : "0 10px 32px -5px #818cf855",
         }}
+        whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
         <motion.p
-          className="text-sm leading-relaxed whitespace-pre-wrap"
+          className="text-sm md:text-base leading-relaxed whitespace-pre-wrap font-medium"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
@@ -172,9 +176,9 @@ function MessageBubble({
         </motion.p>
 
         <motion.p
-          className="text-xs opacity-60 mt-2"
+          className="text-xs opacity-70 mt-2 md:mt-3 font-mono"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
+          animate={{ opacity: 0.7 }}
           transition={{ delay: 0.2 }}
         >
           {formatMessageTime(message.createdAt)}
@@ -182,23 +186,25 @@ function MessageBubble({
 
         {/* Message tail */}
         <div
-          className={`absolute bottom-0 w-3 h-3 ${
-            isUser
-              ? "right-0 bg-primary transform rotate-45 translate-x-1 translate-y-1"
-              : "left-0 bg-muted transform rotate-45 -translate-x-1 translate-y-1"
-          }`}
+          className={`absolute bottom-0 w-3 h-3 md:w-4 md:h-4
+            ${isUser
+              ? "right-0 bg-blue-500/80 dark:bg-blue-400/80 transform rotate-45 translate-x-1 md:translate-x-2 translate-y-1 md:translate-y-2"
+              : "left-0 bg-white/40 dark:bg-blue-900/60 transform rotate-45 -translate-x-1 md:-translate-x-2 translate-y-1 md:translate-y-2"
+            }`}
         />
       </motion.div>
 
       {/* Avatar for user messages */}
       {isUser && (
         <motion.div
-          whileHover={{ scale: 1.1, rotate: -5 }}
+          whileHover={{ scale: 1.12, rotate: -5 }}
+          whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 300 }}
+          className="drop-shadow-xl"
         >
-          <Avatar className="h-10 w-10 ring-2 ring-secondary/20">
-            <AvatarFallback className="bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground">
-              <User className="h-5 w-5" />
+          <Avatar className="h-10 w-10 md:h-12 md:w-12 ring-4 ring-blue-400/30 shadow-lg">
+            <AvatarFallback className="bg-gradient-to-br from-blue-400 via-indigo-400 to-purple-400 text-white shadow-lg animate-pulse">
+              <User className="h-5 w-5 md:h-6 md:w-6" />
             </AvatarFallback>
           </Avatar>
         </motion.div>
@@ -217,31 +223,26 @@ function LoadingIndicator() {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="flex gap-4 justify-start"
+      className="flex gap-4 justify-start items-end"
     >
-      <motion.div whileHover={{ scale: 1.1 }}>
-        <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-          <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
+      <motion.div whileHover={{ scale: 1.12 }}>
+        <Avatar className="h-12 w-12 ring-4 ring-blue-300/30 shadow-lg">
+          <AvatarFallback className="bg-gradient-to-br from-blue-400 via-purple-400 to-indigo-400 text-white shadow-lg animate-pulse">
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "linear",
-              }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
-              <Bot className="h-5 w-5" />
+              <Bot className="h-6 w-6" />
             </motion.div>
           </AvatarFallback>
         </Avatar>
       </motion.div>
-
-      <div className="bg-gradient-to-br from-muted to-muted/80 rounded-2xl rounded-bl-md px-4 py-3 relative">
-        <div className="flex space-x-2">
+      <div className="relative">
+        <div className="bg-gradient-to-br from-white/30 via-blue-100/60 to-blue-200/60 dark:from-black/30 dark:via-blue-900/40 dark:to-blue-900/60 rounded-3xl rounded-bl-2xl px-6 py-4 shadow-xl border border-white/20 backdrop-blur-md flex items-center gap-2 min-w-[64px]">
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className="w-2 h-2 bg-muted-foreground rounded-full"
+              className="w-3 h-3 rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-indigo-400 shadow-lg"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.5, 1, 0.5],
@@ -255,7 +256,9 @@ function LoadingIndicator() {
             />
           ))}
         </div>
-        <div className="absolute bottom-0 left-0 w-3 h-3 bg-muted transform rotate-45 -translate-x-1 translate-y-1" />
+        <div className="absolute bottom-0 left-0 w-4 h-4 bg-white/40 dark:bg-blue-900/60 transform rotate-45 -translate-x-2 translate-y-2" />
+        {/* Glowing effect */}
+        <span className="absolute -inset-2 rounded-3xl blur-lg opacity-30 bg-gradient-to-br from-blue-400 via-purple-400 to-indigo-400 animate-pulse" />
       </div>
     </motion.div>
   );

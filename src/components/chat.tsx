@@ -36,14 +36,17 @@ export default function Chat() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/80 p-4 flex items-center justify-center">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Animated background gradient and glass effect */}
+      <div className="absolute inset-0 z-0 animate-gradient-x bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-500 via-purple-500 to-blue-400 opacity-60 blur-2xl" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-background/80 via-background/60 to-background/90 backdrop-blur-2xl" />
       <motion.div
         variants={cardVariants}
         initial="hidden"
         animate="visible"
-        className="w-full max-w-5xl h-[85vh]"
+        className="relative z-10 w-full max-w-4xl h-[90vh] md:h-[85vh] flex items-center justify-center px-2 md:px-0"
       >
-        <Card className="h-full flex flex-col shadow-2xl border-0 bg-card/95 backdrop-blur-sm">
+        <Card className="h-full flex flex-col shadow-2xl border border-white/20 bg-white/20 dark:bg-black/30 backdrop-blur-2xl rounded-3xl ring-1 ring-white/30 w-full max-w-full md:max-w-4xl overflow-hidden">
           {/* Header with title and clear button */}
           <ChatHeader
             messageCount={messages.length}

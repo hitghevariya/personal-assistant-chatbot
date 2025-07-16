@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import OpenAI from "openai";
-
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 // Zod validation schema for the request body
 const chatRequestSchema = z.object({
@@ -29,32 +23,53 @@ export async function POST(request: NextRequest) {
 
     const { message, conversationHistory } = validatedData;
 
-    // Build the conversation messages for OpenAI
+    // Build the conversation messages for Gemini
     const messages = [
-      {
-        role: "system" as const,
-        content:
-          "You are a helpful assistant. Provide clear, concise, and helpful responses.",
-      },
-      // Include previous conversation history
       ...conversationHistory,
-      // Add the new user message
-      {
-        role: "user" as const,
-        content: message,
-      },
+      { role: "user", content: message },
     ];
 
-    // Call OpenAI API with the conversation history
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: messages,
-      max_tokens: 1000,
-      temperature: 0.7,
+    // Prepare Gemini API request
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "Gemini API key not configured." },
+        { status: 500 }
+      );
+    }
+
+    const geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    const geminiRequestBody = {
+      contents: [
+        {
+          parts: [
+            { text: messages.map((m) => `${m.role}: ${m.content}`).join("\n") },
+          ],
+        },
+      ],
+    };
+
+    const geminiResponse = await fetch(geminiApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-goog-api-key": apiKey,
+      },
+      body: JSON.stringify(geminiRequestBody),
     });
 
+    if (!geminiResponse.ok) {
+      const errorData = await geminiResponse.json();
+      console.log("Gemini API error details:", errorData);
+      return NextResponse.json(
+        { error: "Gemini API error", details: errorData },
+        { status: 500 }
+      );
+    }
+
+    const geminiData = await geminiResponse.json();
     const assistantResponse =
-      completion.choices[0]?.message?.content ||
+      geminiData.candidates?.[0]?.content?.parts?.[0]?.text ||
       "I apologize, but I cannot generate a response at the moment.";
 
     // Return the response
@@ -69,14 +84,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Invalid request data", details: error.errors },
         { status: 400 }
-      );
-    }
-
-    // Handle OpenAI API errors
-    if (error instanceof Error && error.message.includes("API key")) {
-      return NextResponse.json(
-        { error: "OpenAI API configuration error" },
-        { status: 500 }
       );
     }
 

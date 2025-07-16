@@ -4,7 +4,7 @@ import {
   loadMessagesFromStorage,
   saveMessagesToStorage,
   clearMessagesFromStorage,
-  convertToOpenAIFormat,
+  convertToGeminiFormat,
   createMessage,
   scrollToBottom,
 } from "@/utils/chatUtils";
@@ -52,7 +52,7 @@ export const useChatState = () => {
     try {
       const requestBody: ChatRequest = {
         message: userMessage.text,
-        conversationHistory: convertToOpenAIFormat(messages),
+        conversationHistory: convertToGeminiFormat(messages),
       };
 
       const response = await fetch("/api/chat", {
