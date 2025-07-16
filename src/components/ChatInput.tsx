@@ -63,9 +63,9 @@ export default function ChatInput({
               onClick={onSendMessage}
               disabled={!input.trim() || isLoading}
               size="sm"
-              className="h-8 w-8 p-0 rounded-lg bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg disabled:opacity-50"
+              className="h-8 w-8 p-0 mb-1.5 rounded-lg bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg disabled:opacity-50"
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-4 w-4 mb-1" />
             </Button>
           </motion.div>
         </div>

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { CardHeader } from "@/components/ui/card";
-import { MessageSquare, RotateCcw } from "lucide-react";
+import { MessageSquare, RotateCcw, Sun, Moon } from "lucide-react";
 import { headerVariants, buttonVariants } from "@/constants/animations";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface ChatHeaderProps {
   messageCount: number;
@@ -11,9 +12,14 @@ interface ChatHeaderProps {
 
 /**
  * Header component for the chat interface
- * Shows title, message counter, and clear chat functionality
+ * Shows title, message counter, theme toggle, and clear chat functionality
  */
-export default function ChatHeader({ messageCount, onClearChat }: ChatHeaderProps) {
+export default function ChatHeader({
+  messageCount,
+  onClearChat,
+}: ChatHeaderProps) {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <CardHeader className="border-b bg-gradient-to-r from-card via-card/90 to-card rounded-t-lg">
       <motion.div
@@ -30,7 +36,7 @@ export default function ChatHeader({ messageCount, onClearChat }: ChatHeaderProp
           >
             <MessageSquare className="h-6 w-6 text-primary" />
           </motion.div>
-          
+
           <div>
             <motion.h1
               className="text-2xl font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text"
@@ -40,7 +46,7 @@ export default function ChatHeader({ messageCount, onClearChat }: ChatHeaderProp
             >
               AI Chat Assistant
             </motion.h1>
-            
+
             <motion.p
               className="text-sm text-muted-foreground"
               initial={{ opacity: 0, x: -20 }}
@@ -54,7 +60,9 @@ export default function ChatHeader({ messageCount, onClearChat }: ChatHeaderProp
           </div>
         </div>
 
-        {messageCount > 0 && (
+        {/* Action buttons container */}
+        <div className="flex items-center gap-2">
+          {/* Theme toggle button */}
           <motion.div
             variants={buttonVariants}
             initial="hidden"
@@ -63,14 +71,38 @@ export default function ChatHeader({ messageCount, onClearChat }: ChatHeaderProp
             <Button
               variant="outline"
               size="sm"
-              onClick={onClearChat}
-              className="text-xs hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all duration-200"
+              onClick={toggleTheme}
+              className="text-xs hover:bg-accent/50 transition-all duration-200"
+              title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
             >
-              <RotateCcw className="h-3 w-3 mr-1" />
-              Clear Chat
+              {theme === "light" ? (
+                <Moon className="h-3 w-3 mr-1" />
+              ) : (
+                <Sun className="h-3 w-3 mr-1" />
+              )}
+              {theme === "light" ? "Dark" : "Light"}
             </Button>
           </motion.div>
-        )}
+
+          {/* Clear chat button */}
+          {messageCount > 0 && (
+            <motion.div
+              variants={buttonVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onClearChat}
+                className="text-xs hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all duration-200"
+              >
+                <RotateCcw className="h-3 w-3 mr-1" />
+                Clear Chat
+              </Button>
+            </motion.div>
+          )}
+        </div>
       </motion.div>
     </CardHeader>
   );
